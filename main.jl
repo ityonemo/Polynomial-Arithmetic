@@ -97,6 +97,3 @@ fourM = scalarMultPoly(oneM,6);
 
 fiveM = multiplyPolys(oneM,twoM);
 
-workspace()
-
-
