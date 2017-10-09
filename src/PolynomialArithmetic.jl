@@ -1,3 +1,7 @@
+module PolynomialArithmetic
+
+# package code goes here
+
 
 NUMPRIMES = 3;
 
@@ -30,7 +34,7 @@ function getMods(a)
     return out
 end;
 
-function addPolys(a,b) 
+function addPolys(a,b)
     if (a.length>b.length)
         len = a.length
         b = copyIntoBigger(b,len)
@@ -39,7 +43,7 @@ function addPolys(a,b)
         a = copyIntoBigger(a,len)
     else
         len = a.length
-    end 
+    end
     out = Poly((len),zeros(Array{Int64}(len,NUMPRIMES)))
     for i = 1:NUMPRIMES
         for j = 1:len
@@ -49,36 +53,15 @@ function addPolys(a,b)
     return out
 end;
 
+include("polynomialio.jl")
+include("multiplication.jl")
+
 function scalarMultPoly(a,scalar)
     out = Poly(a.length, zeros(Array{Int64}(a.length,NUMPRIMES)))
     for i = 1:NUMPRIMES
         for j = 1:a.length
             out.mods[j,i] = (a.mods[j,i]*scalar)%PrimesArray[i]
         end
-    end
-    return out
-end;
-
-function multiplyPolys(a,b)
-    len = a.length + b.length - 1
-    shorterPoly = (a.length <= b.length ? a : b)
-    longerPoly = (a.length <= b.length ? b : a)
-    sLength = shorterPoly.length
-    lLength = longerPoly.length
-    shorterPoly = copyIntoBigger(shorterPoly,len)
-    longerPoly = copyIntoBigger(longerPoly,len)
-    out = Poly((len),zeros(Array{Int64}(len,NUMPRIMES)))
-    for i = 1:NUMPRIMES
-        accum = zeros(Array{Int64}(len,1))
-        for j = 1:sLength
-            for k = 1:lLength
-                accum[j+k-1] += shorterPoly.mods[j,i] * longerPoly.mods[k,i]
-            end
-        end
-        for jj = 1:len
-            accum[jj] = accum[jj]%PrimesArray[i]
-        end
-        out.mods[1:end, i] = accum[1:end]
     end
     return out
 end;
@@ -97,3 +80,5 @@ fourM = scalarMultPoly(oneM,6);
 
 fiveM = multiplyPolys(oneM,twoM);
 
+
+end # module
